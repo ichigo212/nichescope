@@ -116,6 +116,17 @@ Then open **Settings** and paste your key. That is all it needs to map channels.
 - [AI clients](docs/ai-clients.md)
 - [Settings](docs/settings.md)
 
+## My channels
+
+I make manhwa recaps on YouTube, and Nichescope started as the tool I needed for them.
+If it helps you, subscribe to them:
+
+<p>
+  <a href="https://www.youtube.com/@BlazeManhwa1?sub_confirmation=1"><img src="https://img.shields.io/badge/Blaze%20Manhwa-Subscribe-FF0000?style=for-the-badge&logo=youtube&logoColor=white&labelColor=1e1f22" alt="Subscribe to Blaze Manhwa"></a>
+  <a href="https://www.youtube.com/@SenpaiRecaps2?sub_confirmation=1"><img src="https://img.shields.io/badge/Senpai%20Recaps-Subscribe-FF0000?style=for-the-badge&logo=youtube&logoColor=white&labelColor=1e1f22" alt="Subscribe to Senpai Recaps"></a>
+  <a href="https://www.youtube.com/@ManhaveraRecaps?sub_confirmation=1"><img src="https://img.shields.io/badge/Manhavera%20Recaps-Subscribe-FF0000?style=for-the-badge&logo=youtube&logoColor=white&labelColor=1e1f22" alt="Subscribe to Manhavera Recaps"></a>
+</p>
+
 ## Contact
 
 Questions or ideas? Message me.
