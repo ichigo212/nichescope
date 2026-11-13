@@ -14,8 +14,12 @@ hand instead; `.env.example` lists every option.
 | --- | --- | --- |
 | `GEMINI_API_KEY` | | Your Gemini API key |
 | `VERTEX_CREDENTIALS` | | A Google Cloud service-account file, used instead of the key |
-| `YOUTUBE_SOURCE` | `public` | `api` uses the YouTube Data API for exact numbers |
+| `YOUTUBE_SOURCE` | `public` | `public` needs no key; views and subscribers are rounded. `api` gives exact numbers and uses daily quota |
 | `YOUTUBE_API_KEY` | | Needed only with `YOUTUBE_SOURCE=api` |
+| `YOUTUBE_QUOTA_PER_DAY` | `10000` | Daily quota to stay within when `YOUTUBE_SOURCE=api` |
+| `YOUTUBE_COOKIES_FILE` | | A `cookies.txt` for caption downloads when YouTube limits them |
+| `VIDEO_PRICE_PER_SECOND` | `0.15` | Used for the cost estimate before clips are generated |
+| `NICHESCOPE_HOST` | `127.0.0.1` | Address the web app listens on |
 | `NICHESCOPE_PORT` | `8765` | Port for the web app |
 | `NICHESCOPE_DATA_DIR` | `data` | Where maps and the research store are kept |
 

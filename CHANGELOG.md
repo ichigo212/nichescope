@@ -24,7 +24,7 @@
   working, needing new packaging, needing a better opening, or weak.
 - The mesh is laid out on rings, one per step, with each channel under the neighbour it is
   most linked to. Links show for the channel in focus.
-- New design.
+- Redesigned web app.
 - 90-day breakouts view.
 - The channel panel shows growth, promotion and real traffic.
 - MCP tools to recheck, remove and restore maps.

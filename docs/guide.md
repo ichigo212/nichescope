@@ -100,8 +100,8 @@ and list the channels they mention. Attach images, PDFs, Word or text files when
 Every channel and video Nichescope reads is kept, so you can search all of it: by subject
 in plain words, title pattern (`I * for 100 days`), age, views, how far above usual, length,
 channel size and language. The presets at the top cover the common questions. **Search
-YouTube** runs a live search, **Who sends viewers** shows which channels recommend a given
-one.
+YouTube** runs a live search. **Who sends viewers** shows which channels recommend a
+given one.
 
 ## Mesh
 
@@ -110,7 +110,7 @@ one.
 The mesh joins every map into one view. The chosen channel is in the middle and each ring is
 one step further out; each channel hangs from the neighbour it is most linked to.
 
-- Cyan rings are channels that make the same kind of videos, violet ones make related videos.
+- Cyan channels make the same kind of videos as the centre. Violet ones make related videos.
 - Point at a channel to dim everything else and light its links. Click to fly to it.
 - **Depth** chooses how many rings to show. **Filters** narrow by size, age, language or breakouts.
 - **Center here** on a channel's card re-centres the whole view on it.
@@ -146,5 +146,5 @@ video**, or start one under **Projects** with a title and your own script.
 5. **Video**: the clips and voiceover are put together as a 1080p video. **Clip sound** sets
    how loud the clips play under the voice.
 
-Clips need a Google Cloud service-account file in Settings. The cost is shown before
-anything is generated.
+Clips need a Google Cloud service-account file in Settings. An estimated cost is shown
+before anything is generated.

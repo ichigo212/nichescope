@@ -1,4 +1,4 @@
-"""Command line: `nichescope serve | mcp | map | refresh | read-uploads | meanings`."""
+"""Command line: `nichescope serve | mcp | map | refresh | read-uploads | demo | meanings`."""
 from __future__ import annotations
 
 import argparse

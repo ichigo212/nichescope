@@ -7,8 +7,8 @@
 </p>
 
 <p align="center">
-  <strong>Find the channels your viewers also watch, what is taking off among them, and what to make next.</strong><br>
-  Runs on your own machine. Works from the browser, the command line or any MCP client.
+  <strong>Find the channels your viewers also watch and the videos taking off among them.</strong><br>
+  Runs on your own machine, from the browser, the command line or an MCP client.
 </p>
 
 <p align="center">
@@ -16,6 +16,11 @@
   <a href="docs/guide.md">Guide</a> ·
   <a href="docs/ai-clients.md">AI clients</a> ·
   <a href="docs/settings.md">Settings</a>
+</p>
+
+<p align="center">
+  <a href="https://t.me/albertwsker2"><img src="https://img.shields.io/badge/Telegram-@albertwsker2-26A5E4?logo=telegram&logoColor=white" alt="Telegram @albertwsker2"></a>
+  <a href="#contact"><img src="https://img.shields.io/badge/Discord-sc0341-5865F2?logo=discord&logoColor=white" alt="Discord sc0341"></a>
 </p>
 
 <p align="center">
@@ -38,10 +43,10 @@ share viewers, like sports, news or music, are set aside so the map stays on you
 
 <p align="center"><img src="docs/images/map.jpg" alt="A channel's map with its nearest neighbours" width="860"></p>
 
-## See what is taking off
+## Breakouts
 
 The channels around yours are read in full, and any video far above its channel's usual
-views is flagged. Sort by how far it beat the usual, filter to the last 30 or 90 days.
+views is flagged. Sort by how far it beat the usual, or filter to the last 30 or 90 days.
 
 <p align="center"><img src="docs/images/breakouts.jpg" alt="Breakout videos around a channel" width="860"></p>
 
@@ -64,12 +69,12 @@ small channels in the niche broke out. It ends in a short list of what to change
 
 ## Ask about your niche
 
-Chat with the map: what is working, who is growing, what to try next. Answers name the
+Ask the map questions, such as which competitor is growing fastest. Answers name the
 channels they lean on, and you can attach screenshots or documents.
 
 <p align="center"><img src="docs/images/chat.jpg" alt="A question about the niche and its answer" width="860"></p>
 
-## Every map in one view
+## The mesh
 
 The mesh puts all your maps on rings around one channel. Point at a channel to light up
 its links. Click it to fly there.
@@ -78,14 +83,15 @@ its links. Click it to fly there.
 
 ## Use it from your AI client
 
-Everything above is also available to Claude Desktop, Claude Code and other MCP clients.
+Maps, breakouts, topic ideas, the study and chat are also available to Claude Desktop,
+Claude Code and other MCP clients.
 Settings shows the exact command to copy.
 
 <p align="center"><img src="docs/images/mcp.jpg" alt="The MCP setup panel in Settings" width="560"></p>
 
 ## Get started
 
-You need Python 3.10 or newer, Node.js 20 or newer and a Gemini API key.
+You need Python 3.10 or newer, Node.js 20.19 or newer and a Gemini API key.
 
 **Windows:** double-click `start.bat`. The first run sets everything up, then the app opens
 in your browser.
@@ -110,6 +116,21 @@ Then open **Settings** and paste your key. That is all it needs to map channels.
 - [AI clients](docs/ai-clients.md)
 - [Settings](docs/settings.md)
 
+## Contact
+
+Questions or ideas? Message me.
+
+<p>
+  <a href="https://t.me/albertwsker2"><img src="https://img.shields.io/badge/Telegram-@albertwsker2-26A5E4?logo=telegram&logoColor=white" alt="Telegram @albertwsker2"></a>
+  <a href="https://discord.com/app"><img src="https://img.shields.io/badge/Discord-sc0341-5865F2?logo=discord&logoColor=white" alt="Discord sc0341"></a>
+</p>
+
+On Discord, add `sc0341` as a friend.
+
+Bugs go in [GitHub issues](https://github.com/ichigo212/nichescope/issues).
+
 ## License
 
 MIT. See [LICENSE](LICENSE).
+
+Nichescope is not affiliated with YouTube or Google.
