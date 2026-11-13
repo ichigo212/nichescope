@@ -13,7 +13,10 @@ paths filled in; press **Copy** and run it, or paste the config into your client
 For Claude Code:
 
 ```bash
+# Windows
 claude mcp add --scope user nichescope -- <project>/.venv/Scripts/python.exe -m nichescope mcp
+# macOS and Linux
+claude mcp add --scope user nichescope -- <project>/.venv/bin/python -m nichescope mcp
 ```
 
 While `nichescope serve` is running you can connect over HTTP instead:

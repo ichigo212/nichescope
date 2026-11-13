@@ -45,7 +45,7 @@ views is flagged. Sort by how far it beat the usual, filter to the last 30 or 90
 
 <p align="center"><img src="docs/images/breakouts.jpg" alt="Breakout videos around a channel" width="860"></p>
 
-## Get ideas you can defend
+## Topic ideas
 
 Ask for topics and each one comes back with the breakouts it builds on, titles ready to
 use, an expected range of views and a fit score. Name a subject, say "black holes" or "a
@@ -54,7 +54,7 @@ YouTube are flagged.
 
 <p align="center"><img src="docs/images/topics.jpg" alt="A run of topic ideas with titles and evidence" width="860"></p>
 
-## Find out what is holding you back
+## Competitor study
 
 The study compares your near competitors' best and worst videos with yours: which title
 habits go with their breakouts, how their best thumbnails look against yours, and how soon
@@ -71,8 +71,8 @@ channels they lean on, and you can attach screenshots or documents.
 
 ## Every map in one view
 
-The mesh puts all your maps on rings around one channel. Point at any channel to light up
-its links, click to fly to it.
+The mesh puts all your maps on rings around one channel. Point at a channel to light up
+its links. Click it to fly there.
 
 <p align="center"><img src="docs/images/mesh-focus.jpg" alt="One channel in focus with its links lit" width="920"></p>
 

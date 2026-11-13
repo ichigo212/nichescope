@@ -31,7 +31,7 @@ one.
 
 <p align="center"><img src="images/setup.jpg" alt="The setup panel" width="520"></p>
 
-Keys are saved to `.env` in the project folder and never leave your machine.
+Keys are saved to `.env` in the project folder and are only sent to the service they belong to.
 
 ## Map your first channel
 

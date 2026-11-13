@@ -21,7 +21,7 @@ Untick one to leave it out without removing it.
 Channels that share your viewers but make something else, like sports, news, music or
 gaming, are set aside. Open **set aside** to see them with a title they were recommended
 with. **Keep** brings one back for good. **Check every channel again** re-judges the whole
-map, which is useful after a big change.
+map, useful after you add many channels.
 
 To add a competitor YouTube did not show, type it under **Add competitors**. Remove a
 channel with the cross next to its name; it stays removed through refreshes and can be
@@ -64,15 +64,15 @@ or the reasoning behind one. Likes and rejections carry into later runs. **Save*
 idea in your list with a status.
 
 Ideas build their hooks from how the strongest videos open, and anything your channel has
-already made by name is left out. Ideas never repeat across runs, and each run starts from
+already made by name is left out. Later runs avoid ideas already suggested, and each run starts from
 breakouts the earlier runs did not use.
 
 ## Study
 
 <p align="center"><img src="images/study.jpg" alt="A competitor study" width="860"></p>
 
-**Study the competitors** reads the near channels on the map that have got going on their
-own and compares each video with its channel's usual views.
+**Study the competitors** reads the near channels on the map with an audience of their own
+(at least 5,000 subscribers and 500 views on a usual video) and compares each video with its channel's usual views.
 
 - **Findings** come first: what is holding the channel back, biggest first, each with what
   it is based on.
@@ -82,7 +82,8 @@ own and compares each video with its channel's usual views.
 - **How soon small channels broke out** shows which video first reached 10,000 views.
 
 For your own connected channel the study also reads how your openings hold against similar
-videos, where your long videos' views come from, and whether a setting holds them back. It
+videos, where your long videos' views come from, and whether videos are marked made for kids,
+blocked in a region or not embeddable. It
 refreshes once a week while the app runs.
 
 ## Chat
@@ -109,7 +110,7 @@ one.
 The mesh joins every map into one view. The chosen channel is in the middle and each ring is
 one step further out; each channel hangs from the neighbour it is most linked to.
 
-- Cyan rings are channels that make the same kind of videos, violet ones are close to it.
+- Cyan rings are channels that make the same kind of videos, violet ones make related videos.
 - Point at a channel to dim everything else and light its links. Click to fly to it.
 - **Depth** chooses how many rings to show. **Filters** narrow by size, age, language or breakouts.
 - **Center here** on a channel's card re-centres the whole view on it.
@@ -118,7 +119,7 @@ one step further out; each channel hangs from the neighbour it is most linked to
 
 ## Your own channel
 
-Connect your channel in Settings and its map also shows the channels that really send you
+Connect your channel in Settings and its map also shows the channels that send you
 viewers, your traffic sources and how well each video held viewers.
 
 YouTube only shows impressions and click-through rate in Studio, so bring them in from

@@ -12,22 +12,24 @@
 - Ideas about a named series, game, person or place show where the name is written (a
   video's title, description or comments) and are dropped when your channel already made it.
 - Topic runs read how the strongest videos open and use that for hooks.
-- A rarely recommended channel the model is unsure about stays off the map until it has been
-  read in full.
+- A rarely recommended channel that cannot be placed with confidence stays off the map until
+  it has been read in full.
 - Faster map and mesh loading on large research stores.
 - Competitor study: title habits that go with breakouts, thumbnail styles of competitors'
-  best and worst videos against yours, how soon small channels broke out, and for your own
-  channel how openings hold, where long-video views come from and whether a setting holds
-  them back. Refreshed weekly; also available to MCP clients.
+  best and worst videos against yours, and how soon small channels broke out.
+- For your own channel the study also checks how openings hold, where long-video views come
+  from, and whether videos are marked made for kids, blocked in a region or not embeddable.
+- The study refreshes weekly and is available to MCP clients.
 - Impressions and click-through rate from a Studio export, with each video judged as
   working, needing new packaging, needing a better opening, or weak.
 - The mesh is laid out on rings, one per step, with each channel under the neighbour it is
   most linked to. Links show for the channel in focus.
-- A new look across the app, a 90-day breakouts view, and growth, promotion and real
-  traffic in the channel panel.
+- New design.
+- 90-day breakouts view.
+- The channel panel shows growth, promotion and real traffic.
 - MCP tools to recheck, remove and restore maps.
 - Settings has a setup panel for keys and credential files.
-- Mapping no longer uses YouTube API quota by default.
+- Mapping no longer needs a YouTube API key.
 
 ## 1.1.0
 
@@ -47,8 +49,8 @@ First release.
   YouTube duplicate check, follow-ups, attachments, likes and saved topics.
 - Chat about a niche with attachments.
 - Searchable research store of channels and videos, including search by meaning.
-- YouTube Analytics for connected channels: traffic sources, retention and measured
-  sources of Suggested traffic.
+- YouTube Analytics for connected channels: traffic sources, retention and which
+  channels send Suggested traffic.
 - Combined mesh of all maps.
 - Transcript and thumbnail tools.
 - Web interface, command line and MCP server (stdio and Streamable HTTP).
