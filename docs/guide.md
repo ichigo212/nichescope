@@ -131,3 +131,20 @@ Studio** on the *Your channel* tab. Each video is then judged on both:
 - **Fix packaging**: people stay but few click. Change the title or thumbnail.
 - **Fix the opening**: people click, then leave. The start does not deliver.
 - **Weak**: few click and few stay.
+
+## Video projects
+
+A project turns a topic into a finished video. Open a topic from a run and press **Make a
+video**, or start one under **Projects** with a title and your own script.
+
+1. **Script**: write it, or have it drafted from the topic at the length you choose.
+2. **Voiceover**: pick one of 30 voices. Generating it locks the script and voice.
+3. **Scenes**: the voiceover is cut into scenes, each with a visual description and a
+   video prompt you can edit.
+4. **Clips**: one generated clip per scene. Clips with speech in them are muted in the
+   final video.
+5. **Video**: the clips and voiceover are put together as a 1080p video. **Clip sound** sets
+   how loud the clips play under the voice.
+
+Clips need a Google Cloud service-account file in Settings. The cost is shown before
+anything is generated.

@@ -8,7 +8,7 @@ version = "1.2.0"
 description = "YouTube niche research: map the channels around yours, find breakouts and plan what to make next."
 readme = "README.md"
 requires-python = ">=3.10"
-license = { text = "Proprietary" }
+license = { text = "MIT" }
 dependencies = [
     "fastapi>=0.115",
     "uvicorn[standard]>=0.30",

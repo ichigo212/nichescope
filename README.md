@@ -112,4 +112,4 @@ Then open **Settings** and paste your key. That is all it needs to map channels.
 
 ## License
 
-Proprietary. All rights reserved.
+MIT. See [LICENSE](LICENSE).

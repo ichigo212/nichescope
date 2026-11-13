@@ -44,7 +44,7 @@ when it is done.
 
 ## Next
 
-- [Guide](guide.md): reading a map, breakouts, topic ideas, chat and research
+- [Guide](guide.md): reading a map, breakouts, topic ideas, the study, chat and video projects
 - [AI clients](ai-clients.md): use Nichescope from Claude and other MCP clients
 - [Settings](settings.md): every option
 
