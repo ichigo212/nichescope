@@ -216,6 +216,7 @@ def build(folder: Path) -> dict:
     main = maps[0]
     _add_topics(main, rnd)
     _add_chat(main)
+    _add_study(folder, main, channels, rnd)
     for m in maps:
         write_json(folder / "maps" / f"{m['channel_id']}.json", m)
     _add_project(folder, main)
@@ -272,6 +273,51 @@ def _add_topics(m: dict, rnd: random.Random) -> None:
     m["saved_topics"] = [{"id": uuid.UUID(int=rnd.getrandbits(128)).hex[:12], "topic": ideas[0][0], "why": ideas[0][1],
                           "detail": "", "titles": [ideas[0][0]], "status": "working", "note": "Script drafted",
                           "title": "", "at": _iso(0.05), "evidence": []}]
+
+
+def _add_study(folder: Path, m: dict, channels: dict, rnd: random.Random) -> None:
+    """A competitor study of the fictional channels, using the real calculations. Thumbnail
+    labels are drawn at random, leaning the way real studies tend to read."""
+    from .research import study
+
+    near = [c for c, r in m["channels"].items() if r["grade"] != "far" and r.get("fit") != "unrelated"][:study.CHANNELS]
+    picked = {c: {"title": channels[c]["title"], "subs": channels[c]["subscribers"], "videos": channels[c]["videos"]}
+              for c in near}
+    rows = study.scored(picked)
+    groups: dict[str, list[str]] = {"winners": [], "losers": [], "ours": [v["id"] for v in m["videos"][:30]]}
+    for c in picked:
+        vs = sorted((r for r in rows if r["cid"] == c), key=lambda r: -r["lift"])
+        groups["winners"] += [v["id"] for v in vs[:4]]
+        groups["losers"] += [v["id"] for v in vs[-4:]]
+
+    def label(lean: float) -> dict:
+        return {"face": rnd.random() < 0.35 + lean, "faces": rnd.choice([0, 1, 1, 2]),
+                "text_words": rnd.choice([2, 3, 3, 4, 5]) - (1 if lean > 0 else 0),
+                "background": rnd.choice(["bright", "colourful", "colourful"] if lean > 0
+                                         else ["dark", "dark", "colourful"]),
+                "arrow_or_circle": rnd.random() < 0.2 + lean, "split_panels": rnd.random() < 0.1,
+                "shows_a_situation": rnd.random() < 0.4 + lean, "strong_emotion": rnd.random() < 0.3 + lean}
+
+    labels = {i: label(0.3) for i in groups["winners"]}
+    labels.update({i: label(-0.1) for i in groups["losers"]})
+    labels.update({i: label(-0.15) for i in groups["ours"]})
+    small = sorted(picked, key=lambda c: picked[c]["subs"])[:study.ESCAPE_CHANNELS]
+    history = [(picked[c]["title"], picked[c]["subs"], sorted(picked[c]["videos"], key=lambda v: v["published_at"]))
+               for c in small]
+    gallery, seen = [], set()
+    for r in sorted(rows, key=lambda r: -r["lift"]):
+        if r["cid"] not in seen:
+            seen.add(r["cid"])
+            gallery.append({**{k: r[k] for k in ("id", "title", "views", "seconds", "published_at", "thumbnail")},
+                            "outlier": round(r["lift"], 1), "channel": picked[r["cid"]]["title"],
+                            "channel_id": r["cid"]})
+    import statistics
+    got = {"at": _iso(1), "channels": len(picked), "videos": len(rows),
+           "usual": statistics.median(channels[c]["usual"] or 0 for c in picked),
+           "uploads30": 6, "titles": study.title_table(rows), "rising": study.rising(rows),
+           "escapes": study.escapes(history), "gallery": gallery[:study.GALLERY], "groups": groups, "own": None}
+    write_json(folder / "study" / f"{m['channel_id']}.json", got)
+    write_json(folder / "study" / "labels.json", labels)
 
 
 def _add_chat(m: dict) -> None:

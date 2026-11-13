@@ -5,7 +5,7 @@ from fastapi import APIRouter, File, HTTPException, UploadFile
 from fastapi.responses import FileResponse, Response
 from pydantic import BaseModel, Field
 
-from ..research import attachments, chat, database, export, mapping, storage, topics
+from ..research import attachments, chat, database, export, mapping, reach, storage, study, topics
 from .jobs import jobs
 from .views import map_view
 
@@ -121,6 +121,28 @@ def expand(map_id: str, body: ChannelRequest) -> dict:
     storage.require(map_id)
     return _job("expand", "Mapping around a neighbour", map_id,
                 lambda report: mapping.expand(map_id, body.channel, report))
+
+
+@router.get("/{map_id}/study")
+def get_study(map_id: str) -> dict:
+    return {"study": study.view(storage.require(map_id))}
+
+
+@router.post("/{map_id}/study")
+def run_study(map_id: str) -> dict:
+    storage.require(map_id)
+    return _job("study", "Studying the competitors", map_id, lambda report: study.run(map_id, report))
+
+
+@router.post("/{map_id}/reach")
+async def import_reach(map_id: str, file: UploadFile = File(...)) -> dict:
+    """Impressions and click-through rate from YouTube Studio's exported table."""
+    m = storage.require(map_id)
+    if not m.get("own"):
+        raise HTTPException(400, "connect this channel first; Studio numbers are joined to its analytics")
+    data = await file.read(reach.MAX_BYTES + 1)
+    reach.save(map_id, reach.parse(data))
+    return _view(map_id)
 
 
 @router.post("/{map_id}/recheck")

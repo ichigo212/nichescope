@@ -13,7 +13,7 @@ from fastapi.staticfiles import StaticFiles
 
 from .. import __version__, ai, preferences
 from ..projects.store import ProjectNotFound
-from ..research import mapping
+from ..research import mapping, study
 from ..research.storage import MapNotFound
 from ..youtube.auth import AuthError
 from ..youtube.data_api import QuotaExceeded, YouTubeError
@@ -36,6 +36,12 @@ def _auto_refresh(stop: threading.Event) -> None:
             try:
                 jobs.start("refresh", "Refreshing an overdue map", lambda report: mapping.refresh_due(report),
                            on_done=lambda m: {"map_id": m["channel_id"]} if m else None)
+            except Busy:
+                pass
+        elif preferences.get()["auto_refresh"] and not jobs.busy and (stale := study.due()):
+            try:
+                jobs.start("study", "Studying the competitors again", lambda report: study.run(stale[0], report),
+                           map_id=stale[0], on_done=lambda m: {"map_id": m["channel_id"]})
             except Busy:
                 pass
         if stop.wait(REFRESH_EVERY_SEC):

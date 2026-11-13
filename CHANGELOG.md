@@ -15,6 +15,12 @@
 - A rarely recommended channel the model is unsure about stays off the map until it has been
   read in full.
 - Faster map and mesh loading on large research stores.
+- Competitor study: title habits that go with breakouts, thumbnail styles of competitors'
+  best and worst videos against yours, how soon small channels broke out, and for your own
+  channel how openings hold, where long-video views come from and whether a setting holds
+  them back. Refreshed weekly; also available to MCP clients.
+- Impressions and click-through rate from a Studio export, with each video judged as
+  working, needing new packaging, needing a better opening, or weak.
 - The mesh is laid out on rings, one per step, with each channel under the neighbour it is
   most linked to. Links show for the channel in focus.
 - A new look across the app, a 90-day breakouts view, and growth, promotion and real

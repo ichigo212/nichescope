@@ -16,7 +16,7 @@ from mcp.types import ToolAnnotations
 from . import __version__
 from .projects import pipeline
 from .projects import store as projects_store
-from .research import chat, database, mapping, metrics, own, storage, topics
+from .research import chat, database, mapping, metrics, own, storage, study, topics
 from .youtube import auth, captions, data_api, quota, web
 
 INSTRUCTIONS = (
@@ -317,6 +317,25 @@ def remove_competitor(map: str, channel: str, restore: bool = False) -> dict:
         cid = _on_map(m, channel)
         m = mapping.remove_channel(m["channel_id"], cid)
     return {"map": m["title"], "restored" if restore else "removed": cid, "channels_on_map": len(m["channels"])}
+
+
+@server.tool(annotations=READ)
+def get_study(map: str) -> dict:
+    """The competitor study of a map: what is holding the channel back, title habits that go with breakouts, thumbnail styles of competitors' best and worst videos against this channel's, and how soon small competitors broke out. Free; run_study makes or refreshes it."""
+    m = storage.find(map)
+    got = study.view(m)
+    if not got:
+        return {"map": m["title"], "study": None, "note": "no study yet; run_study makes one"}
+    return {"map": m["title"], **{k: got[k] for k in ("at", "channels", "videos", "findings", "rising", "escapes")},
+            "titles": [t for t in got["titles"] if t["up"] or t["down"]], "styles": got["styles"]}
+
+
+@server.tool(annotations=WRITE)
+def run_study(map: str) -> dict:
+    """Study a map's near competitors again (takes a few minutes). Public reads use no quota; thumbnail labels use the model."""
+    m = storage.find(map)
+    study.run(m["channel_id"])
+    return get_study(m["channel_id"])
 
 
 @server.tool(annotations=WRITE)

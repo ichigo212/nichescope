@@ -19,6 +19,7 @@ WINDOW_DAYS = 90
 TOP_VIDEOS = 60
 LONG_MIN_SEC = 181
 MIN_VIEWS = 20
+MIN_IMPRESSIONS = 100
 
 
 def traffic(channel_id: str, top_videos: list[str], report: Reporter = silent) -> dict[str, dict]:
@@ -52,18 +53,38 @@ def traffic(channel_id: str, top_videos: list[str], report: Reporter = silent) -
 
 
 def diagnose(rows: list[dict]) -> dict:
-    """Mark each video against the channel's median retention. Changes rows in place."""
+    """Say what each long video's numbers mean, against this channel's own medians. Changes
+    rows in place.
+
+    With impressions and click-through rate (imported from Studio), a video is working
+    (people click and stay), packaging (they stay but few click: change the title or
+    thumbnail), content (they click then leave: the opening does not deliver) or weak.
+    Without them, only retention is judged: holding or dropping.
+    """
     pcts = [r["avg_view_pct"] for r in rows
             if r.get("avg_view_pct") is not None and (r.get("period_views") or 0) >= MIN_VIEWS]
-    median = statistics.median(pcts) if pcts else None
+    ctrs = [r["ctr"] for r in rows if r.get("ctr") is not None and (r.get("impressions") or 0) >= MIN_IMPRESSIONS]
+    mid_pct = statistics.median(pcts) if pcts else None
+    mid_ctr = statistics.median(ctrs) if ctrs else None
     for r in rows:
-        if median is None or r.get("avg_view_pct") is None or (r.get("period_views") or 0) < MIN_VIEWS:
+        kept = (None if mid_pct is None or r.get("avg_view_pct") is None
+                or (r.get("period_views") or 0) < MIN_VIEWS else r["avg_view_pct"] >= mid_pct)
+        clicked = (None if mid_ctr is None or r.get("ctr") is None
+                   or (r.get("impressions") or 0) < MIN_IMPRESSIONS else r["ctr"] >= mid_ctr)
+        if kept is None:
             r["verdict"], r["note"] = "unknown", "not enough views yet"
-        elif r["avg_view_pct"] >= median:
-            r["verdict"], r["note"] = "holding", "viewers stay longer than on your typical video"
+        elif clicked is None:
+            r["verdict"], r["note"] = (("holding", "viewers stay longer than on your typical video") if kept
+                                       else ("dropping", "viewers leave sooner than on your typical video"))
+        elif kept and clicked:
+            r["verdict"], r["note"] = "working", "people click and stay: make more like this"
+        elif kept:
+            r["verdict"], r["note"] = "packaging", "people stay but few click: change the title or thumbnail"
+        elif clicked:
+            r["verdict"], r["note"] = "content", "people click, then leave: the opening does not deliver"
         else:
-            r["verdict"], r["note"] = "dropping", "viewers leave sooner than on your typical video"
-    return {"retention": median}
+            r["verdict"], r["note"] = "weak", "few click and few stay"
+    return {"retention": mid_pct, "ctr": mid_ctr}
 
 
 def performance(channel_id: str, videos: list[dict]) -> dict:

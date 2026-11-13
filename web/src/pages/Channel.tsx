@@ -17,10 +17,11 @@ import { OwnTab } from "./channel/OwnTab";
 import { ResearchTab } from "./channel/ResearchTab";
 import { RunPage } from "./channel/RunPage";
 import { SettingsTab } from "./channel/SettingsTab";
+import { StudyTab } from "./channel/StudyTab";
 import { TopicsTab } from "./channel/TopicsTab";
 
-type Tab = "channels" | "topics" | "breakouts" | "research" | "yours" | "chat" | "settings";
-const TABS: Tab[] = ["channels", "topics", "breakouts", "research", "yours", "chat", "settings"];
+type Tab = "channels" | "topics" | "breakouts" | "research" | "study" | "yours" | "chat" | "settings";
+const TABS: Tab[] = ["channels", "topics", "breakouts", "research", "study", "yours", "chat", "settings"];
 
 export function ChannelPage() {
   const { id = "", tab: rawTab, run } = useParams();
@@ -83,6 +84,7 @@ export function ChannelPage() {
     ["topics", "Topics"],
     ["breakouts", "Breakouts"],
     ["research", "Research"],
+    ["study", "Study"],
     ...(yours ? ([["yours", "Your channel"]] as [Tab, string][]) : []),
     ["chat", "Chat"],
     ["settings", "Settings"],
@@ -153,6 +155,7 @@ export function ChannelPage() {
             {tab === "topics" && <TopicsTab onGenerate={() => setGenerating(true)} />}
             {tab === "breakouts" && <BreakoutsTab />}
             {tab === "research" && <ResearchTab />}
+            {tab === "study" && <StudyTab />}
             {tab === "yours" && (yours ? <OwnTab /> : <Empty title="No analytics for this channel" body="Connect this channel in Settings to see its traffic." />)}
             {tab === "chat" && <ChatTab />}
             {tab === "settings" && <SettingsTab />}

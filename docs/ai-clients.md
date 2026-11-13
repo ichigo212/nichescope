@@ -43,6 +43,7 @@ claude mcp add --transport http nichescope http://127.0.0.1:8765/mcp
 | `list_topic_runs` / `get_topic_run` | Earlier runs in full |
 | `mark_topic` / `topic_settings` | Likes, rejections and run settings |
 | `ask` | A question about a niche |
+| `get_study` / `run_study` | The competitor study of a map, or a fresh one |
 
 Two prompts are included: `niche_report` for a briefing on a niche, and `plan_next_video`
 for a plan for one video.

@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { Upload } from "lucide-react";
+import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
-import { youtubeVideo } from "../../api";
-import { Badge, Segmented, Section } from "../../components/ui";
-import { count, percent } from "../../format";
-import { useMap } from "./context";
+import { importReach, youtubeVideo } from "../../api";
+import { Badge, Button, Segmented, Section } from "../../components/ui";
+import { ago, count, percent } from "../../format";
+import { toast } from "../../toasts";
+import { useMap, useMapChange } from "./context";
 
 const SOURCE_NAMES: Record<string, string> = {
   SHORTS: "Shorts feed",
@@ -24,13 +26,17 @@ const SOURCE_NAMES: Record<string, string> = {
   IMMERSIVE_LIVE: "Live feed",
 };
 
-const VERDICT: Record<string, { word: string; tone: "accent" | "danger" | "plain" }> = {
+const VERDICT: Record<string, { word: string; tone: "accent" | "danger" | "plain" | "busy" | "sync" }> = {
+  working: { word: "Working", tone: "accent" },
+  packaging: { word: "Fix the packaging", tone: "busy" },
+  content: { word: "Fix the opening", tone: "sync" },
+  weak: { word: "Weak", tone: "danger" },
   holding: { word: "Holding", tone: "accent" },
   dropping: { word: "Dropping", tone: "danger" },
   unknown: { word: "Unknown", tone: "plain" },
 };
 
-type Filter = "all" | "holding" | "dropping" | "unknown";
+type Filter = "all" | keyof typeof VERDICT;
 
 export function OwnTab() {
   const { m } = useMap();
@@ -42,6 +48,8 @@ export function OwnTab() {
   const allMinutes = own.sources.reduce((sum, s) => sum + s.minutes, 0) || 1;
   const score = own.accuracy;
   const days = own.windowDays ?? 90;
+  const hasReach = own.videos.some((v) => v.ctr != null);
+  const present = Object.keys(VERDICT).filter((k) => own.videos.some((v) => verdict(v.verdict) === k));
 
   return (
     <div className="flex flex-col gap-6">
@@ -70,29 +78,33 @@ export function OwnTab() {
 
       <Section
         title="Your videos"
-        hint={`Retention against your own median${own.medians.retention != null ? ` of ${own.medians.retention}% watched` : ""}.`}
+        hint={
+          hasReach
+            ? `Click-through and retention against your own medians: ${own.medians.ctr ?? "?"}% clicked, ${own.medians.retention ?? "?"}% watched.`
+            : `Retention against your own median${own.medians.retention != null ? ` of ${own.medians.retention}% watched` : ""}. Import your Studio table to judge clicks too.`
+        }
         aside={
-          <Segmented<Filter>
-            label="Which videos"
-            value={filter}
-            onChange={setFilter}
-            options={[
-              { value: "all", label: "All" },
-              { value: "holding", label: "Holding" },
-              { value: "dropping", label: "Dropping" },
-              { value: "unknown", label: "Unknown" },
-            ]}
-          />
+          <div className="flex flex-wrap items-center gap-2">
+            <ImportReach at={own.reachAt} />
+            <Segmented<Filter>
+              label="Which videos"
+              value={filter}
+              onChange={setFilter}
+              options={[{ value: "all", label: "All" }, ...present.map((k) => ({ value: k as Filter, label: VERDICT[k]!.word }))]}
+            />
+          </div>
         }
       >
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[560px] table-fixed text-sm">
+          <table className="w-full min-w-[640px] table-fixed text-sm">
             <thead className="text-left text-xs text-ink-3">
               <tr>
                 <th className="py-1 font-medium">Video</th>
                 <th className="w-24 py-1 text-right font-medium">Views</th>
+                {hasReach && <th className="w-24 py-1 text-right font-medium">Shown</th>}
+                {hasReach && <th className="w-20 py-1 text-right font-medium">Clicked</th>}
                 <th className="w-24 py-1 text-right font-medium">Watched</th>
-                <th className="w-32 py-1 pl-4 font-medium">Retention</th>
+                <th className="w-40 py-1 pl-4 font-medium">Verdict</th>
               </tr>
             </thead>
             <tbody>
@@ -106,6 +118,8 @@ export function OwnTab() {
                       </a>
                     </td>
                     <td className="py-1.5 text-right text-ink-2">{count(v.period_views ?? v.views)}</td>
+                    {hasReach && <td className="py-1.5 text-right text-ink-2">{v.impressions == null ? "?" : count(v.impressions)}</td>}
+                    {hasReach && <td className="py-1.5 text-right text-ink-2">{v.ctr == null ? "?" : `${v.ctr}%`}</td>}
                     <td className="py-1.5 text-right text-ink-2">{v.avg_view_pct == null ? "?" : `${v.avg_view_pct}%`}</td>
                     <td className="py-1.5 pl-4">
                       <Badge tone={verdictInfo.tone}>{verdictInfo.word}</Badge>
@@ -165,5 +179,36 @@ export function OwnTab() {
         </Section>
       )}
     </div>
+  );
+}
+
+/** Impressions and click-through rate come from Studio's own export, as the API does not report them. */
+function ImportReach({ at }: { at: string | null }) {
+  const { m, busy } = useMap();
+  const change = useMapChange();
+  const input = useRef<HTMLInputElement>(null);
+  return (
+    <>
+      <input
+        ref={input}
+        type="file"
+        accept=".csv,.zip"
+        className="hidden"
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          e.target.value = "";
+          if (file) void change(importReach(m.id, file)).then((ok) => ok && toast("Studio numbers imported"));
+        }}
+      />
+      <Button
+        tone="ghost"
+        icon={<Upload className="size-4" />}
+        disabled={busy}
+        title="In Studio: Analytics, Advanced mode, add Impressions and Impressions click-through rate, then Export current view"
+        onClick={() => input.current?.click()}
+      >
+        {at ? `Studio table from ${ago(at)}` : "Import from Studio"}
+      </Button>
+    </>
   );
 }

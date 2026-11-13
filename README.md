@@ -54,6 +54,14 @@ YouTube are flagged.
 
 <p align="center"><img src="docs/images/topics.jpg" alt="A run of topic ideas with titles and evidence" width="860"></p>
 
+## Find out what is holding you back
+
+The study compares your near competitors' best and worst videos with yours: which title
+habits go with their breakouts, how their best thumbnails look against yours, and how soon
+small channels in the niche broke out. It ends in a short list of what to change first.
+
+<p align="center"><img src="docs/images/study.jpg" alt="A competitor study with findings and title habits" width="860"></p>
+
 ## Ask about your niche
 
 Chat with the map: what is working, who is growing, what to try next. Answers name the

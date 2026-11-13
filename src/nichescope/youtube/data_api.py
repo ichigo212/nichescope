@@ -170,6 +170,19 @@ def videos(ids: Iterable[str]) -> list[dict]:
     return out
 
 
+def video_settings(ids: list[str], as_channel: str | None = None) -> dict | None:
+    """How many of these videos are marked made for kids, blocked in a region or not
+    embeddable. One unit per 50 videos."""
+    ids = list(dict.fromkeys(ids))[:50]
+    if not ids:
+        return None
+    items = get("videos", {"part": "status,contentDetails", "id": ",".join(ids)}, "reading video settings",
+                as_channel).get("items", [])
+    return {"read": len(items), "kids": sum(bool(i["status"].get("madeForKids")) for i in items),
+            "blocked": sum(bool(i["contentDetails"].get("regionRestriction")) for i in items),
+            "unembeddable": sum(not i["status"].get("embeddable", True) for i in items)}
+
+
 def uploads(playlist: str, n: int = UPLOADS_READ) -> list[dict]:
     """A channel's latest public long-form videos, newest first.
 

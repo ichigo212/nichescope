@@ -3,14 +3,14 @@ from __future__ import annotations
 
 import re
 
-from ..research import database, metrics, own, relevance, storage, topics
+from ..research import database, metrics, own, reach, relevance, storage, topics
 from ..util import hours_since
 from ..youtube import auth
 
 VIDEO_KEYS = ("id", "title", "views", "published_at", "thumbnail", "seconds", "outlier", "on_topic")
 FIT_RANK = {"unclear": 1, "adjacent": 2, "same": 3}
 OWN_VIDEO_KEYS = ("id", "title", "thumbnail", "published_at", "views", "period_views", "avg_view_pct",
-                  "subs", "verdict", "note")
+                  "subs", "impressions", "ctr", "verdict", "note")
 BREAKOUTS_SENT = 48
 NEW_DAYS = 7
 CARD_DOTS = 18
@@ -125,10 +125,11 @@ def _own(m: dict) -> dict | None:
     if not data:
         return None
     real = sorted(data.get("traffic", {}).items(), key=lambda kv: -kv[1]["views"])[:40]
-    videos = [dict(v) for v in data.get("videos", [])]
+    shown = reach.load(m["channel_id"]) or {}
+    videos = [{**v, **(shown.get("videos") or {}).get(v["id"], {})} for v in data.get("videos", [])]
     medians = own.diagnose(videos)
     return {"windowDays": data.get("window_days"), "sources": data.get("sources", []),
-            "medians": medians,
+            "medians": medians, "reachAt": shown.get("at"),
             "videos": [{k: v.get(k) for k in OWN_VIDEO_KEYS} for v in videos],
             "traffic": [{"id": c, "title": r["title"], "views": r["views"], "minutes": r["minutes"],
                          "top": r["videos"][0] if r["videos"] else None} for c, r in real],

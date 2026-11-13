@@ -80,6 +80,8 @@ export interface OwnVideo {
   period_views: number | null;
   avg_view_pct: number | null;
   subs: number | null;
+  impressions?: number | null;
+  ctr?: number | null;
   verdict: string;
   note: string;
 }
@@ -187,6 +189,8 @@ export interface Own {
   windowDays: number | null;
   sources: TrafficSource[];
   medians: { retention?: number | null; ctr?: number | null };
+  /** When impressions and click-through rate were last imported from Studio. */
+  reachAt: string | null;
   videos: OwnVideo[];
   traffic: {
     id: string;
@@ -575,4 +579,37 @@ export interface SetupCheck {
   model: CheckResult;
   youtube: CheckResult;
   video?: CheckResult;
+}
+
+export interface StudyStyle {
+  n: number;
+  face: number;
+  strong_emotion: number;
+  shows_a_situation: number;
+  arrow_or_circle: number;
+  split_panels: number;
+  bright: number;
+  dark: number;
+  faces: number;
+  words: number;
+  [key: string]: number;
+}
+
+/** What the near competitors of a map do differently when their videos break out. */
+export interface Study {
+  at: string;
+  stale: boolean;
+  channels: number;
+  videos: number;
+  usual: number;
+  uploads30: number;
+  recentTitles: number;
+  findings: { key: string; title: string; finding: string; action: string; basis: string }[];
+  titles: { key: string; label: string; count: number; share: number; ours: number | null; with: number | null; without: number | null; up: number; down: number }[];
+  rising: { key: string; label: string; was: number; now: number }[];
+  styles: { winners: StudyStyle | null; losers: StudyStyle | null; ours: StudyStyle | null };
+  styleRows: { key: string; label: string }[];
+  escapes: { channel: string; subs: number; videos: number; hit: number | null; days: number | null; title: string; views: number | null }[];
+  theirBest: Video[];
+  yourLatest: Video[];
 }

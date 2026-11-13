@@ -67,6 +67,24 @@ Ideas build their hooks from how the strongest videos open, and anything your ch
 already made by name is left out. Ideas never repeat across runs, and each run starts from breakouts the earlier runs did not
 use.
 
+## Study
+
+<p align="center"><img src="images/study.jpg" alt="A competitor study" width="860"></p>
+
+**Study the competitors** reads the near channels on the map that have got going on their
+own and compares each video with its channel's usual views.
+
+- **Findings** come first: what is holding the channel back, biggest first, each with what
+  it is based on.
+- **Title habits** shows how often each habit appears, how videos with it did against those
+  without, and in how many channels it did better or worse. *Ours* is your recent titles.
+- **Thumbnails** compares the styles of each competitor's best and worst videos with yours.
+- **How soon small channels broke out** shows which video first reached 10,000 views.
+
+For your own connected channel the study also reads how your openings hold against similar
+videos, where your long videos' views come from, and whether a setting holds them back. It
+refreshes once a week while the app runs.
+
 ## Chat
 
 <p align="center"><img src="images/chat.jpg" alt="A conversation about the niche" width="860"></p>
@@ -102,3 +120,13 @@ one step further out; each channel hangs from the neighbour it is most linked to
 
 Connect your channel in Settings and its map also shows the channels that really send you
 viewers, your traffic sources and how well each video held viewers.
+
+YouTube only shows impressions and click-through rate in Studio, so bring them in from
+there: in Studio open **Analytics**, **Advanced mode**, add *Impressions* and *Impressions
+click-through rate*, then **Export current view**. Upload the file with **Import from
+Studio** on the *Your channel* tab. Each video is then judged on both:
+
+- **Working**: people click and stay. Make more like it.
+- **Fix the packaging**: people stay but few click. Change the title or thumbnail.
+- **Fix the opening**: people click, then leave. The start does not deliver.
+- **Weak**: few click and few stay.

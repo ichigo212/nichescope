@@ -20,6 +20,7 @@ import type {
   StoreStats,
   Transcript,
   Account,
+  Study,
 } from "./types";
 
 export class ApiError extends Error {
@@ -103,6 +104,8 @@ export const removeMap = (id: string) => del<{ kept_as: string }>(mapPath(id));
 export const restoreMap = (file: string) => post<{ id: string }>(`/api/maps/removed/${enc(file)}/restore`);
 export const refreshMap = (id: string) => post<Started>(`${mapPath(id)}/refresh`);
 export const deepenMap = (id: string, steps: number) => post<Started>(`${mapPath(id)}/deepen`, { steps });
+export const getStudy = (id: string) => get<{ study: Study | null }>(`${mapPath(id)}/study`);
+export const runStudy = (id: string) => post<Started>(`${mapPath(id)}/study`);
 export const recheckMap = (id: string) => post<Started>(`${mapPath(id)}/recheck`);
 export const expandAround = (id: string, channel: string) => post<Started>(`${mapPath(id)}/expand`, { channel });
 export const addCompetitors = (id: string, names: string[]) => post<Started>(`${mapPath(id)}/competitors`, { names });
@@ -136,6 +139,11 @@ export const uploadFile = (id: string, file: File) => {
   const form = new FormData();
   form.append("file", file);
   return request<Attachment>("POST", `${mapPath(id)}/files`, form);
+};
+export const importReach = (id: string, file: File) => {
+  const form = new FormData();
+  form.append("file", file);
+  return request<NicheMap>("POST", `${mapPath(id)}/reach`, form);
 };
 export const pointsTo = (id: string) => get<{ rows: Pointer[] }>(`${mapPath(id)}/points-to`);
 export const exportUrl = (id: string, what: "channels" | "breakouts") => `${mapPath(id)}/export/${what}.csv`;
