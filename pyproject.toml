@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nichescope"
+version = "1.2.0"
+description = "YouTube niche research: map the channels around yours, find breakouts and plan what to make next."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Proprietary" }
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.30",
+    "python-multipart>=0.0.9",
+    "requests>=2.31",
+    "numpy>=1.26",
+    "google-genai>=1.0",
+    "python-dotenv>=1.0",
+    "yt-dlp>=2024.1.1",
+    "mcp>=2.0",
+    "imageio-ffmpeg>=0.5",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<9", "httpx>=0.27", "ruff>=0.6"]
+
+[project.scripts]
+nichescope = "nichescope.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+nichescope = ["web/**/*"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "BLE"]
+ignore = ["B008"]
+
+[tool.ruff.lint.per-file-ignores]
+# MCP tool descriptions are single-line docstrings shown verbatim to the client.
+"src/nichescope/mcp_server.py" = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

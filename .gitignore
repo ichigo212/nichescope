@@ -1,0 +1,37 @@
+# Secrets and local state: never committed
+.env
+.env.*
+!.env.example
+credentials/
+data/
+*.har
+*.pem
+*.key
+*service-account*.json
+*oauth_client*.json
+client_secret*.json
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Web client
+web/node_modules/
+web/.vite/
+*.tsbuildinfo
+src/nichescope/web/
+
+# Editors and OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
