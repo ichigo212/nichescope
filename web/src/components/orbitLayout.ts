@@ -12,6 +12,8 @@ const MAX_LANES = 4;
 /** Average angle from a channel to its parent that is close enough (about 7 degrees). */
 const NEAR_ENOUGH = 0.12;
 const RELAX_ROUNDS = 400;
+/** How much of the first ring a channel with nothing below it takes, against one per channel below. */
+const LEAF_SHARE = 0.25;
 
 export interface Placed {
   x: number;
@@ -108,8 +110,10 @@ export function orbitLayout(nodes: MeshNode[], links: Link[], centre: string): O
         || strength(b) - strength(a));
       members.splice(0, members.length, ...groups(members).flatMap(interleave));
     }
-    // A crowded ring grows wider rather than deeper than MAX_LANES lanes.
-    inner = Math.max(inner, (members.length * ROOM) / (MAX_LANES * TAU));
+    // A crowded ring grows wider rather than deeper than MAX_LANES lanes. The first ring gets
+    // twice the room it needs, so its channels can take slices as wide as their families.
+    const first = members.every((i) => parent[i] === root);
+    inner = Math.max(inner, ((first ? 2 : 1) * members.length * ROOM) / (MAX_LANES * TAU));
     const perLane = Math.max(6, Math.floor((TAU * inner) / ROOM));
     // A crowded ring takes more lanes, so channels can stay near their parents.
     let lanes = Math.ceil(members.length / perLane);
@@ -136,16 +140,39 @@ export function orbitLayout(nodes: MeshNode[], links: Link[], centre: string): O
     const n = members.length;
     const gap = ROOM / (inner * lanes);
     const even = members.map((_, k) => (TAU * k) / n);
-    if (!follow || n * gap >= TAU * 0.9 || members.every((i) => parent[i] === root)) return even;
-    // Where each would like to sit: its group fanned out around the parent's angle.
+    if (!follow) return even;
     const wish: number[] = [];
-    for (let k = 0; k < n; ) {
-      const p = parent[members[k]!]!;
-      let end = k;
-      while (end < n && parent[members[end]!] === p) end++;
-      const size = end - k;
-      for (let j = 0; j < size; j++) wish.push(angle[p]! + (j - (size - 1) / 2) * gap);
-      k = end;
+    if (members.every((i) => parent[i] === root)) {
+      // The first ring: each channel gets a slice in proportion to the channels below it,
+      // so the rings further out line up behind it.
+      const weight = members.map((i) => LEAF_SHARE + (below[i] ?? 0));
+      const total = weight.reduce((a, b) => a + b, 0);
+      let before = 0;
+      for (const w of weight) {
+        wish.push((TAU * (before + w / 2)) / total);
+        before += w;
+      }
+    } else if (n * gap >= TAU * 0.9) {
+      // Too crowded to sit near parents: space evenly, turned to face the parents best.
+      let sx = 0;
+      let sy = 0;
+      members.forEach((i, k) => {
+        const d = angle[parent[i]!]! - even[k]!;
+        sx += Math.cos(d);
+        sy += Math.sin(d);
+      });
+      const turn = Math.atan2(sy, sx);
+      return even.map((a) => a + turn);
+    } else {
+      // Where each would like to sit: its group fanned out around the parent's angle.
+      for (let k = 0; k < n; ) {
+        const p = parent[members[k]!]!;
+        let end = k;
+        while (end < n && parent[members[end]!] === p) end++;
+        const size = end - k;
+        for (let j = 0; j < size; j++) wish.push(angle[p]! + (j - (size - 1) / 2) * gap);
+        k = end;
+      }
     }
     for (let k = 1; k < n; k++) {
       while (wish[k]! < wish[k - 1]! - Math.PI) wish[k] = wish[k]! + TAU;

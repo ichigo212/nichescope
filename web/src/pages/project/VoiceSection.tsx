@@ -14,7 +14,7 @@ export function VoiceSection() {
   const [asking, setAsking] = useState(false);
   const locked = !!p.voiceover;
   const script = draft ?? p.script;
-  const options = Object.entries(voices).map(([name, about]): [string, string] => [name, about ? `${name} — ${about}` : name]);
+  const options = Object.entries(voices).map(([name, about]): [string, string] => [name, about ? `${name}: ${about}` : name]);
   if (!(p.voice in voices)) options.unshift([p.voice, p.voice]);
 
   const generate = async () => {

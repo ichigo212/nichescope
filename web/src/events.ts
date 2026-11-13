@@ -13,6 +13,7 @@ let state: JobState = { current: null, last: null };
 const watchers = new Set<() => void>();
 const listeners = new Set<(e: JobEvent) => void>();
 let source: EventSource | null = null;
+let listening = false;
 
 function set(next: Partial<JobState>) {
   state = { ...state, ...next };
@@ -39,9 +40,21 @@ function hello(status: Status) {
   }
 }
 
-/** Open the one event stream the app listens on. The browser reconnects it by itself. */
+/** Open the one event stream the app listens on. The browser reconnects it by itself.
+ *  It is closed when the page is left: a stream left open by every page load would use up
+ *  the browser's six connections to the app and stall the next page. */
 export function startEvents() {
   if (source) return;
+  if (!listening) {
+    listening = true;
+    window.addEventListener("pagehide", () => {
+      source?.close();
+      source = null;
+    });
+    window.addEventListener("pageshow", (e) => {
+      if (e.persisted) startEvents();
+    });
+  }
   source = new EventSource("/api/events");
   source.onmessage = (msg: MessageEvent<string>) => {
     let data: { type?: string; status?: Status; job?: Job };

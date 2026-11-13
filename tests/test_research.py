@@ -285,3 +285,21 @@ def test_openings_use_the_first_seconds_of_the_strongest_videos(monkeypatch):
     text = topics.openings(rows)
     assert "a opens strong" in text and "much later" not in text and "[Two]" not in text
     assert topics.openings([]) == ""
+
+
+def test_topic_names_survive_a_reload(sample_map):
+    m = storage.load(sample_map["channel_id"])
+    named = {"name": "Storm Keep", "source": "its title", "video": "hit"}
+    m["topics"] = [{"id": "r1", "at": days_ago(0), "topics": [
+        {"topic": "A", "evidence": ["hit"], "name": named},
+        {"topic": "B", "evidence": ["hit"], "name": "old plain name", "confirmed": True}]}]
+    storage.save(m)
+    got = storage.load(sample_map["channel_id"])["topics"][0]["topics"]
+    assert got[0]["name"] == named
+    assert "name" not in got[1] and "confirmed" not in got[1]
+
+
+def test_a_video_read_twice_counts_once():
+    videos = [video("hit", 20000, 5)] + [video(f"v{i}", 1000, 5 + i) for i in range(10)] + [video("hit", 20000, 5)]
+    got = metrics.measure(videos)
+    assert [v["id"] for v in got["breakouts"]] == ["hit"]

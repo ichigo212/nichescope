@@ -5,6 +5,7 @@ import asyncio
 import hashlib
 import json
 import sys
+import time
 from urllib.parse import urlparse
 
 import requests
@@ -20,6 +21,7 @@ from .jobs import jobs
 from .views import cards, home_breakouts, mesh_view
 
 IMAGE_TIMEOUT_SEC = 8
+STREAM_SECONDS = 60
 router = APIRouter(prefix="/api", tags=["system"])
 
 IMAGE_HOSTS = ("yt3.ggpht.com", "yt3.googleusercontent.com", "i.ytimg.com", "lh3.googleusercontent.com")
@@ -75,8 +77,11 @@ async def events(request: Request) -> StreamingResponse:
     """Server-sent events: job progress and completion."""
     async def stream():
         last = jobs.seq
-        yield f"data: {json.dumps({'type': 'hello', 'status': status()})}\n\n"
-        while not await request.is_disconnected():
+        # Each stream ends after STREAM_SECONDS and the browser reconnects, so a connection
+        # the client forgot cannot hold one of its few connection slots for long.
+        ends = time.monotonic() + STREAM_SECONDS
+        yield f"retry: 1000\ndata: {json.dumps({'type': 'hello', 'status': status()})}\n\n"
+        while time.monotonic() < ends and not await request.is_disconnected():
             got = await asyncio.to_thread(jobs.wait, last, 5.0)
             if not got:
                 yield ": ping\n\n"

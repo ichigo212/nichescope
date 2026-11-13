@@ -1,6 +1,6 @@
 """Connected YouTube channels (OAuth 2.0, installed-app flow with PKCE).
 
-A connected channel unlocks its private analytics, and its sign-in can also be used
+A connected channel gives access to its private analytics, and its sign-in can also be used
 for public Data API reads when no `YOUTUBE_API_KEY` is configured.
 """
 from __future__ import annotations

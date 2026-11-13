@@ -35,3 +35,7 @@ src/nichescope/web/
 *.swp
 .DS_Store
 Thumbs.db
+
+# Local tool state
+.claude-flow/
+.claude/

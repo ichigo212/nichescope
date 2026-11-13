@@ -54,8 +54,11 @@ def _upgrade(m: dict) -> dict:
         for t in batch.get("topics", []):
             if "series" in t:
                 t["topic"] = t.pop("series")
-            for k in ("confirmed", "name"):
-                t.pop(k, None)
+            # Older files kept a confirmed flag and a plain-text name; today's name is a dict
+            # saying where it is written.
+            t.pop("confirmed", None)
+            if not isinstance(t.get("name"), dict):
+                t.pop("name", None)
     for s in m["saved_topics"]:
         if "series" in s:
             s["topic"] = s.pop("series")

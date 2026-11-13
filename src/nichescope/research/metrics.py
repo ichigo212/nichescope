@@ -31,6 +31,8 @@ def measure(videos: list[dict], now: datetime | None = None) -> dict:
     hit does not hide what is working now.
     """
     now = now or datetime.now(timezone.utc)
+    # Paged reads can return a video twice; each counts once.
+    videos = list({v["id"]: v for v in reversed(videos)}.values())[::-1] if videos and "id" in videos[0] else videos
     settled = [v["views"] for v in videos if days_since(v["published_at"], now) >= SETTLED_DAYS][:USUAL_FROM]
     usual = statistics.median(settled) if settled else None
     views_30d = sum(v["views"] for v in videos if days_since(v["published_at"], now) <= RECENT_DAYS)
@@ -62,11 +64,15 @@ def channel_breakouts(c: dict) -> list[dict]:
 def breakouts(m: dict) -> list[dict]:
     """Every relevant channel's breakouts, biggest first."""
     rows = []
+    seen: set[str] = set()
     for cid, c in relevant_channels(m).items():
         if c.get("off"):
             continue
         name = c.get("title", cid)
         for v in channel_breakouts(c):
+            if v.get("id") in seen:
+                continue
+            seen.add(v.get("id"))
             rows.append({**v, "channel_id": cid, "channel": name, "on_topic": on_topic(v, name, m, c)})
     return sorted(rows, key=lambda v: v["outlier"], reverse=True)
 

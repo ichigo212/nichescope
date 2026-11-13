@@ -1,6 +1,6 @@
 # Getting started
 
-<p align="center"><img src="images/home.jpg" alt="The channel list with three mapped channels" width="860"></p>
+<p align="center"><img src="images/map.jpg" alt="A mapped channel and the channels around it" width="860"></p>
 
 ## What you need
 
@@ -26,8 +26,8 @@ nichescope serve
 ## Add your key
 
 Open **Settings**. Paste the Gemini key under *Language model* and press **Save**. The four
-tiles at the top turn green as each part is ready, and **Test connection** checks them
-for real.
+tiles at the top turn green as each part is ready, and **Test connection** checks each
+one.
 
 <p align="center"><img src="images/setup.jpg" alt="The setup panel" width="520"></p>
 

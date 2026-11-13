@@ -64,8 +64,8 @@ or the reasoning behind one. Likes and rejections carry into later runs. **Save*
 idea in your list with a status.
 
 Ideas build their hooks from how the strongest videos open, and anything your channel has
-already made by name is left out. Ideas never repeat across runs, and each run starts from breakouts the earlier runs did not
-use.
+already made by name is left out. Ideas never repeat across runs, and each run starts from
+breakouts the earlier runs did not use.
 
 ## Study
 

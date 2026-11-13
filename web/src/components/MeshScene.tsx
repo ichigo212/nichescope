@@ -15,6 +15,9 @@ const LOADERS = 4;
 const LABELS = 8;
 const BADGES = 12;
 const SEGMENTS = 12;
+/** Links fade out over this angle around the ring, down to FAR_LINK of their strength. */
+const LINK_FADE = Math.PI / 3;
+const FAR_LINK = 0.08;
 /** Seconds for the opening: rings unfold one after another. */
 const UNFOLD = 0.55;
 const UNFOLD_STAGGER = 0.4;
@@ -239,6 +242,16 @@ export function MeshScene(props: MeshSceneProps) {
 
     // The tree: one curved link from each channel to the channel it hangs from.
     const tree = placed.map((p, i) => [p.parent, i] as const).filter(([p]) => p >= 0);
+    // At rest, a link that travels far around the ring is drawn fainter, so a channel with
+    // hundreds of children does not paint a fan over the middle. Pointing at it shows them all.
+    const reach = tree.map(([a, b]) => {
+      const pa = placed[a]!;
+      const pb = placed[b]!;
+      if (Math.hypot(pa.x, pa.z) < 1) return 1;
+      let d = Math.abs(Math.atan2(pa.z, pa.x) - Math.atan2(pb.z, pb.x));
+      if (d > Math.PI) d = Math.PI * 2 - d;
+      return Math.max(FAR_LINK, 1 - d / LINK_FADE);
+    });
     const per = SEGMENTS + 1;
     const treeGeometry = new THREE.BufferGeometry();
     const treeAt = new Float32Array(tree.length * per * 3);
@@ -316,7 +329,7 @@ export function MeshScene(props: MeshSceneProps) {
       tree.forEach(([a, b], k) => {
         const shown = Math.min(alphaTarget[a]!, alphaTarget[b]!);
         const lit = focus >= 0 && (a === focus || b === focus);
-        const strength = (lit ? 0 : near ? 0.035 : placed[b]!.ring > 1 ? 0.13 : 0.16) * shown;
+        const strength = (lit ? 0 : near ? 0.035 : placed[b]!.ring > 1 ? 0.13 : 0.16) * shown * reach[k]!;
         const c = colourFor(nodes[b]!, centre);
         for (let s = 0; s < per; s++) {
           // Brighter near the child, fading towards the parent.
@@ -334,6 +347,8 @@ export function MeshScene(props: MeshSceneProps) {
 
     // Avatars are drawn into one texture atlas as they arrive, nearest rings first.
     let atlasDirty = false;
+    // Drawn avatars wait here until the atlas reaches the GPU, so none shows as an empty disc.
+    const drawn: number[] = [];
     let next = 0;
     let stopped = false;
     const loading = new Set<HTMLImageElement>();
@@ -350,8 +365,7 @@ export function MeshScene(props: MeshSceneProps) {
         loading.delete(img);
         if (stopped) return;
         atlas.drawImage(img, (i % PER_ROW) * CELL, Math.floor(i / PER_ROW) * CELL, CELL, CELL);
-        cell[i] = i;
-        geometry.attributes.aCell!.needsUpdate = true;
+        drawn.push(i);
         atlasDirty = true;
         loadNext();
       };
@@ -379,6 +393,12 @@ export function MeshScene(props: MeshSceneProps) {
       return div;
     }
     const projected = new THREE.Vector3();
+    function rank(i: number) {
+      const p = live.current;
+      if (i === selected || i === hovered) return Infinity;
+      if (nodes[i]!.id === p.centre) return Number.MAX_VALUE;
+      return nodes[i]!.views30d ?? 0;
+    }
     function placeTags() {
       const p = live.current;
       const w = el!.clientWidth;
@@ -391,9 +411,29 @@ export function MeshScene(props: MeshSceneProps) {
       if (selected >= 0) named.add(selected);
       const badged = new Set(p.badges ? [...visible].filter((i) => (nodes[i]!.breakout ?? 0) >= p.badgeMin)
         .sort((a, b) => (nodes[b]!.breakout ?? 0) - (nodes[a]!.breakout ?? 0)).slice(0, BADGES) : []);
+      // Labels go down most important first; one that would overlap a label already placed
+      // is hidden, so names never print over each other.
+      const priority = [...named].sort((a, b) => rank(b) - rank(a));
+      const taken: [number, number, number, number][] = [];
+      for (const i of priority) {
+        const div = tag(i, "label");
+        projected.set(position[i * 3]!, position[i * 3 + 1]!, position[i * 3 + 2]!).project(camera);
+        const x = (projected.x * 0.5 + 0.5) * w;
+        const y = (-projected.y * 0.5 + 0.5) * h + radius(i) + 4;
+        const half = div.offsetWidth / 2 + 4;
+        const box: [number, number, number, number] = [x - half, y, x + half, y + div.offsetHeight];
+        const clear = projected.z <= 1 && !taken.some((t) => box[0] < t[2] && box[2] > t[0] && box[1] < t[3] && box[3] > t[1]);
+        div.style.opacity = clear ? String(alpha[i]!) : "0";
+        div.style.transform = `translate(${x}px, ${y}px) translate(-50%, 0)`;
+        if (clear) taken.push(box);
+      }
       for (const [key, div] of tags) {
         const i = key >= 0 ? key : -key - 1;
-        if (!(key >= 0 ? named.has(i) : badged.has(i))) {
+        if (key >= 0) {
+          if (!named.has(i)) div.style.opacity = "0";
+          continue;
+        }
+        if (!badged.has(i)) {
           div.style.opacity = "0";
           continue;
         }
@@ -402,11 +442,8 @@ export function MeshScene(props: MeshSceneProps) {
         const y = (-projected.y * 0.5 + 0.5) * h;
         const r = radius(i);
         div.style.opacity = projected.z > 1 ? "0" : String(alpha[i]!);
-        div.style.transform = key >= 0
-          ? `translate(${x}px, ${y + r + 4}px) translate(-50%, 0)`
-          : `translate(${x + r * 0.7}px, ${y - r * 0.9}px) translate(-50%, -50%)`;
+        div.style.transform = `translate(${x + r * 0.7}px, ${y - r * 0.9}px) translate(-50%, -50%)`;
       }
-      for (const i of named) tag(i, "label");
       for (const i of badged) tag(i, "badge");
     }
 
@@ -542,6 +579,9 @@ export function MeshScene(props: MeshSceneProps) {
         texture.needsUpdate = true;
         atlasDirty = false;
         lastAtlas = now;
+        // The texture uploads during this frame's render, before the cells below are drawn.
+        for (const i of drawn.splice(0)) cell[i] = i;
+        geometry.attributes.aCell!.needsUpdate = true;
       }
       if (flight) {
         flight.t = Math.min(1, flight.t + 1 / 60);
