@@ -127,6 +127,6 @@ click-through rate*, then **Export current view**. Upload the file with **Import
 Studio** on the *Your channel* tab. Each video is then judged on both:
 
 - **Working**: people click and stay. Make more like it.
-- **Fix the packaging**: people stay but few click. Change the title or thumbnail.
+- **Fix packaging**: people stay but few click. Change the title or thumbnail.
 - **Fix the opening**: people click, then leave. The start does not deliver.
 - **Weak**: few click and few stay.

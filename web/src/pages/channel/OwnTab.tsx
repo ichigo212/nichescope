@@ -28,7 +28,7 @@ const SOURCE_NAMES: Record<string, string> = {
 
 const VERDICT: Record<string, { word: string; tone: "accent" | "danger" | "plain" | "busy" | "sync" }> = {
   working: { word: "Working", tone: "accent" },
-  packaging: { word: "Fix the packaging", tone: "busy" },
+  packaging: { word: "Fix packaging", tone: "busy" },
   content: { word: "Fix the opening", tone: "sync" },
   weak: { word: "Weak", tone: "danger" },
   holding: { word: "Holding", tone: "accent" },
